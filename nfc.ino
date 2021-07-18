@@ -40,11 +40,13 @@ void setup() {
   if (debug) { Serial.begin(115200); }
 
   // OLED
+  u8g2.enableUTF8Print();
   u8g2.begin();
   u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_fub20_tf);
-//  u8g2.drawUTF8(5,31,"Simon");
-  u8g2.drawUTF8(30,31,"Siloé");
+  u8g2.setFont(u8g2_font_lubI18_tf);
+  u8g2.setCursor(30,31);
+//  u8g2.print(F("Simon"));
+  u8g2.print(F("Siloé"));
   u8g2.sendBuffer();
 
   // Button
@@ -80,7 +82,6 @@ void setup() {
   if (debug) { Serial.println(F("DFPlayer Mini online.")); }
 
   myDFPlayer.volume(11);
-  //RST pin is a pin for reset and power-down. When this pin goes low, hard power-down is enabled. On the rising edge, the module is reset.
   delay(500);
   u8g2.setPowerSave(1);
 }
@@ -126,61 +127,57 @@ void loop() {
     if (debug) { Serial.println(F(" Lalala ")); }
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_fub20_tf);
-    u8g2.drawUTF8(20,31,"Lalala");
+    u8g2.setCursor(20,31);
+    u8g2.print(F("Lalala"));
     u8g2.sendBuffer();
     myDFPlayer.loopFolder(1);
     delay(1000);
     u8g2.setPowerSave(1);
-    delay(500);
   } else if (mfrc522.uid.uidByte[1] == 21 && mfrc522.uid.uidByte[2] == 145 && mfrc522.uid.uidByte[3] == 122 && mfrc522.uid.uidByte[4] == 76) {
     // 4 21 145 122 76 // Peach
     if (debug) { Serial.println(F(" Henri Dès ")); }
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_fub20_tf);
-    u8g2.drawUTF8(0,31,"Henri Dès");
+    u8g2.setCursor(0,31);
+    u8g2.print(F("Henri Dès"));
     u8g2.sendBuffer();
     myDFPlayer.loopFolder(2);
     delay(1000);
     u8g2.setPowerSave(1);
-    delay(500);
   } else if (mfrc522.uid.uidByte[1] == 21 && mfrc522.uid.uidByte[2] == 145 && mfrc522.uid.uidByte[3] == 202 && mfrc522.uid.uidByte[4] == 70) {
     // 4 21 145 202 70 // Dinosaure
     if (debug) { Serial.println(F(" Aldebert ")); }
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_fub20_tf);
-    u8g2.drawUTF8(10,31,"Aldebert");
+    u8g2.setCursor(10,31);
+    u8g2.print(F("Aldebert"));
     u8g2.sendBuffer();
     myDFPlayer.loopFolder(3);
     delay(1000);
     u8g2.setPowerSave(1);
-    delay(500);
-  } else if (mfrc522.uid.uidByte[1] == 1 && mfrc522.uid.uidByte[2] == 12 && mfrc522.uid.uidByte[3] == 14 && mfrc522.uid.uidByte[4] == 112) {
+  } else if (mfrc522.uid.uidByte[1] == 31 && mfrc522.uid.uidByte[2] == 236 && mfrc522.uid.uidByte[3] == 14 && mfrc522.uid.uidByte[4] == 112) {
     // 4 1 12 14 112 // DonkeyKong
+    // 4 31 236 14 112 // Wario
     if (debug) { Serial.println(F(" Boumboum ")); }
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_fub20_tf);
-    u8g2.drawUTF8(10,31,"Boum Boum");
+    u8g2.setCursor(0,31);
+    u8g2.print(F("BoumBoum"));
     u8g2.sendBuffer();
     myDFPlayer.loopFolder(4);
     delay(1000);
     u8g2.setPowerSave(1);
-    delay(500);
   } else if (mfrc522.uid.uidByte[1] == 67 && mfrc522.uid.uidByte[2] == 158 && mfrc522.uid.uidByte[3] == 15 && mfrc522.uid.uidByte[4] == 112) {
     // 4 67 158 15 112 // Toad
     if (debug) { Serial.println(F(" Tout aléatoire ")); }
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_fub20_tf);
-    u8g2.drawUTF8(8,31,"Aléatoire");
+    u8g2.setCursor(8,31);
+    u8g2.print(F("Tout"));
     u8g2.sendBuffer();
     myDFPlayer.randomAll();
     delay(1000);
     u8g2.setPowerSave(1);
-    delay(500);
   } else {
     if (debug) {
       Serial.print(mfrc522.uid.uidByte[0]);
