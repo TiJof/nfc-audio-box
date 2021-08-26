@@ -1,7 +1,9 @@
-bool debug = false;
+#define DEBUG false
+#define DEBUG_SERIAL if(DEBUG)Serial
 
 // OLED
 #include <U8g2lib.h>
+#include <SPI.h>
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0); 
 
 // NFC
@@ -37,7 +39,7 @@ Bounce VolUpDebouncer = Bounce();
 bool isPaused = false;
 
 void setup() {
-  if (debug) { Serial.begin(115200); }
+  DEBUG_SERIAL.begin(115200);
 
   // OLED
   u8g2.enableUTF8Print();
@@ -69,7 +71,7 @@ void setup() {
   // NFC
   SPI.begin();
   mfrc522.PCD_Init();
-  if (debug) { mfrc522.PCD_DumpVersionToSerial(); }
+//  if (debug) { mfrc522.PCD_DumpVersionToSerial(); }
 
   // dfplayer
   mySoftwareSerial.begin(9600);
@@ -79,7 +81,7 @@ void setup() {
     Serial.println(F("2.Please insert the SD card!"));
     while(true);
   }
-  if (debug) { Serial.println(F("DFPlayer Mini online.")); }
+  DEBUG_SERIAL.println(F("DFPlayer Mini online."));
 
   myDFPlayer.volume(11);
   delay(500);
@@ -89,34 +91,34 @@ void setup() {
 void loop() {
   PreviousDebouncer.update();
   if ( PreviousDebouncer.fell()) {
-    if (debug) { Serial.print(F("Previous")); }
+    DEBUG_SERIAL.print(F("Previous"));
     myDFPlayer.next();
   }
   PauseDebouncer.update();
   if ( PauseDebouncer.fell()) {
     if ( ! isPaused) {
-    if (debug) { Serial.print(F("Pause")); }
+      DEBUG_SERIAL.print(F("Pause"));
       isPaused = !isPaused;
       myDFPlayer.pause();
     } else {
-    if (debug) { Serial.print(F("Reprise")); }
+      DEBUG_SERIAL.print(F("Reprise"));
       isPaused = !isPaused;
       myDFPlayer.start();
     }
   }
   NextDebouncer.update();
   if ( NextDebouncer.fell()) {
-    if (debug) { Serial.print(F("next")); }
+    DEBUG_SERIAL.print(F("next"));
     myDFPlayer.previous();
   }
   VolDownDebouncer.update();
   if ( VolDownDebouncer.fell()) {
-    if (debug) { Serial.print(F("vol -")); }
+    DEBUG_SERIAL.print(F("vol -"));
     myDFPlayer.volumeDown();
   }
   VolUpDebouncer.update();
   if ( VolUpDebouncer.fell()) {
-    if (debug) { Serial.print(F("vol +")); }
+    DEBUG_SERIAL.print(F("vol +"));
     myDFPlayer.volumeUp();
   }
 
@@ -124,7 +126,7 @@ void loop() {
   if ( ! mfrc522.PICC_ReadCardSerial()) { return; }
   if (mfrc522.uid.uidByte[1] == 76 && mfrc522.uid.uidByte[2] == 32 && mfrc522.uid.uidByte[3] == 14 && mfrc522.uid.uidByte[4] == 112) {
     // 4 76 32 14 112 // robot bleu
-    if (debug) { Serial.println(F(" Lalala ")); }
+    DEBUG_SERIAL.println(F(" Lalala "));
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
     u8g2.setCursor(20,31);
@@ -135,7 +137,7 @@ void loop() {
     u8g2.setPowerSave(1);
   } else if (mfrc522.uid.uidByte[1] == 21 && mfrc522.uid.uidByte[2] == 145 && mfrc522.uid.uidByte[3] == 122 && mfrc522.uid.uidByte[4] == 76) {
     // 4 21 145 122 76 // Peach
-    if (debug) { Serial.println(F(" Henri Dès ")); }
+    DEBUG_SERIAL.println(F(" Henri Dès "));
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
     u8g2.setCursor(0,31);
@@ -146,7 +148,7 @@ void loop() {
     u8g2.setPowerSave(1);
   } else if (mfrc522.uid.uidByte[1] == 21 && mfrc522.uid.uidByte[2] == 145 && mfrc522.uid.uidByte[3] == 202 && mfrc522.uid.uidByte[4] == 70) {
     // 4 21 145 202 70 // Dinosaure
-    if (debug) { Serial.println(F(" Aldebert ")); }
+    DEBUG_SERIAL.println(F(" Aldebert "));
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
     u8g2.setCursor(10,31);
@@ -158,7 +160,7 @@ void loop() {
   } else if (mfrc522.uid.uidByte[1] == 31 && mfrc522.uid.uidByte[2] == 236 && mfrc522.uid.uidByte[3] == 14 && mfrc522.uid.uidByte[4] == 112) {
     // 4 1 12 14 112 // DonkeyKong
     // 4 31 236 14 112 // Wario
-    if (debug) { Serial.println(F(" Boumboum ")); }
+    DEBUG_SERIAL.println(F(" Boumboum "));
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
     u8g2.setCursor(0,31);
@@ -169,7 +171,7 @@ void loop() {
     u8g2.setPowerSave(1);
   } else if (mfrc522.uid.uidByte[1] == 67 && mfrc522.uid.uidByte[2] == 158 && mfrc522.uid.uidByte[3] == 15 && mfrc522.uid.uidByte[4] == 112) {
     // 4 67 158 15 112 // Toad
-    if (debug) { Serial.println(F(" Tout aléatoire ")); }
+    DEBUG_SERIAL.println(F(" Tout aléatoire "));
     u8g2.setPowerSave(0);
     u8g2.clearBuffer();
     u8g2.setCursor(8,31);
@@ -178,8 +180,8 @@ void loop() {
     myDFPlayer.randomAll();
     delay(1000);
     u8g2.setPowerSave(1);
-  } else {
-    if (debug) {
+  }/* else {
+    if (DEBUG) {
       Serial.print(mfrc522.uid.uidByte[0]);
       Serial.print(F(" "));
       Serial.print(mfrc522.uid.uidByte[1]);
@@ -190,6 +192,5 @@ void loop() {
       Serial.print(F(" "));
       Serial.println(mfrc522.uid.uidByte[4]);
       delay(500);
-    }
-  }
+    }*/
 } // loop()
